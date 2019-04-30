@@ -3,7 +3,7 @@ version: '3'
 services:
 
   elasticsearch:
-    image: elasticsearch:6.7.1
+    image: elasticsearch:$ELK_VERSION
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
@@ -11,11 +11,12 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    env_file: .env
     networks:
       - elk
 
   logstash:
-    image: logstash:6.7.1
+    image: logstash:$ELK_VERSION
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
@@ -24,17 +25,19 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    env_file: .env
     networks:
       - elk
     depends_on:
       - elasticsearch
 
   kibana:
-    image: kibana:6.7.1
+    image: kibana:$ELK_VERSION
     volumes:
       - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
       - "5601:5601"
+    env_file: .env
     networks:
       - elk
     depends_on:
@@ -44,3 +47,6 @@ networks:
 
   elk:
     driver: bridge
+
+
+
