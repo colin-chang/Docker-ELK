@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
 
@@ -11,6 +11,7 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
     env_file: .env
     networks:
       - elk
@@ -34,7 +35,7 @@ services:
   kibana:
     image: kibana:$ELK_VERSION
     volumes:
-      - ./kibana/config/:/usr/share/kibana/config:ro
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
       - "5601:5601"
     env_file: .env
@@ -47,6 +48,3 @@ networks:
 
   elk:
     driver: bridge
-
-
-
